@@ -1,1 +1,1 @@
-- Résoudre le problème de génération du labyrinthe
+- Optimiser la génération du labyrinth pour ne pas recoller à chaque event le fond et les murs.

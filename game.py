@@ -1,9 +1,12 @@
-#! usr/bin python3
+#! usr/bin/env python3
 # coding:utf-8
 
 import pygame
 from pygame.locals import *
 import pandas as pd
+
+#Importe le module comportant les classes
+import class_game as cl
 
 pygame.init()
 
@@ -13,18 +16,10 @@ backgroud=pygame.Surface([600,600])
 
 window.blit(backgroud,(0,0))
 
-class Wall(pygame.sprite.Sprite):
-
-	def __init__(self,image):
-		pygame.sprite.Sprite.__init__(self)
-
-		self.image=pygame.image.load(image).convert_alpha()
-
-		self.rect=self.image.get_rect()
-
 
 #Création d'un groupe de sprite pour la suite
 wall_list=pygame.sprite.Group()
+all_sprite=pygame.sprite.Group()
 
 ######
 #Génération du Labyrinthe
@@ -42,23 +37,29 @@ y_pos=0
 for row, series in labyrinthe_map.iterrows():
 	x_pos=0
 	for columns, series in labyrinthe_map.iteritems():
+
+		#Création des murs
 		if labyrinthe_map.iloc[row,columns]=='1':
-			wall=Wall('pictures/wall-40x40.png')
+			wall=cl.Wall('pictures/wall-40x40.png')
 			wall.rect.x=x_pos
 			wall.rect.y=y_pos
 			wall_list.add(wall)
+			all_sprite.add(wall)
+
+		#Création personnage
+		if labyrinthe_map.iloc[row,columns]=='start':
+			player=cl.Player('pictures/macgyver.png')
+			player.rect.x=x_pos
+			player.rect.y=y_pos
+			all_sprite.add(player)
+
 		x_pos=x_pos+40
+
 	y_pos=y_pos+40
 
 ######
 
-
-
-
-wall_list.draw(window)
-
-pygame.display.flip()
-
+pygame.key.set_repeat(400, 30)
 
 continuer=1
 
@@ -66,3 +67,15 @@ while continuer:
 	for event in pygame.event.get():
 		if event.type==QUIT:
 			continuer=0
+		if event.type==KEYDOWN:
+
+			direction=event.key
+			player.move(direction)
+
+			#Test pour la collision
+			if pygame.sprite.spritecollide(player,wall_list,False):
+				print('Collision')
+
+	window.blit(backgroud,(0,0))
+	all_sprite.draw(window)		
+	pygame.display.flip()
