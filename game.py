@@ -40,17 +40,19 @@ for row, series in labyrinthe_map.iterrows():
 
 		#Création des murs
 		if labyrinthe_map.iloc[row,columns]=='1':
-			wall=cl.Wall('pictures/wall-40x40.png')
+			wall=cl.Wall()
 			wall.rect.x=x_pos
 			wall.rect.y=y_pos
+			#Ajout dans les groupes de sprite pour affichage et gestion des collisions
 			wall_list.add(wall)
 			all_sprite.add(wall)
 
 		#Création personnage
 		if labyrinthe_map.iloc[row,columns]=='start':
-			player=cl.Player('pictures/macgyver.png')
+			player=cl.Player()
 			player.rect.x=x_pos
 			player.rect.y=y_pos
+			#Ajout dans le groupe all_sprite pour affichage
 			all_sprite.add(player)
 
 		x_pos=x_pos+40
@@ -63,19 +65,18 @@ pygame.key.set_repeat(400, 30)
 
 continuer=1
 
+def update_screen():
+	window.blit(backgroud,(0,0))
+	all_sprite.draw(window)		
+	pygame.display.flip()
+
+
 while continuer:
 	for event in pygame.event.get():
 		if event.type==QUIT:
 			continuer=0
 		if event.type==KEYDOWN:
-
 			direction=event.key
-			player.move(direction)
+			player.move(direction,wall_list)
 
-			#Test pour la collision
-			if pygame.sprite.spritecollide(player,wall_list,False):
-				print('Collision')
-
-	window.blit(backgroud,(0,0))
-	all_sprite.draw(window)		
-	pygame.display.flip()
+		update_screen()
