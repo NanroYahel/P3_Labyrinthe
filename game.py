@@ -4,8 +4,8 @@
 import pygame
 from pygame.locals import *
 import pandas as pd
+import random as rd
 
-#Importe le module comportant les classes
 import class_game as cl
 
 pygame.init()
@@ -15,16 +15,17 @@ window=pygame.display.set_mode((600,600),RESIZABLE)
 backgroud=pygame.Surface([600,600])
 
 window.blit(backgroud,(0,0))
+	
 
-
-#Création d'un groupe de sprite pour la suite
+#Create sprite groups using for drawing sprites and collision management
 wall_list=pygame.sprite.Group()
+stuff_list=pygame.sprite.Group()
 all_sprite=pygame.sprite.Group()
 
 ######
-#Génération du Labyrinthe
+#Generation of Labyrinth
 
-#Fonction permettant d'ouvrir le fichier contenant la map du labyrinthe
+#Function to open the file with the labyrinth map
 def data_from_csv(csv_file):
 	data=pd.read_csv(csv_file, sep=",", header=None, dtype=str)
 	return data
@@ -38,21 +39,21 @@ for row, series in labyrinthe_map.iterrows():
 	x_pos=0
 	for columns, series in labyrinthe_map.iteritems():
 
-		#Création des murs
+		#Create walls
 		if labyrinthe_map.iloc[row,columns]=='1':
 			wall=cl.Wall()
 			wall.rect.x=x_pos
 			wall.rect.y=y_pos
-			#Ajout dans les groupes de sprite pour affichage et gestion des collisions
+			#Add in groups for drawing and collision management
 			wall_list.add(wall)
 			all_sprite.add(wall)
 
-		#Création personnage
+		#Create player character
 		if labyrinthe_map.iloc[row,columns]=='start':
 			player=cl.Player()
 			player.rect.x=x_pos
 			player.rect.y=y_pos
-			#Ajout dans le groupe all_sprite pour affichage
+			#Add to the all_sprite group for drawing
 			all_sprite.add(player)
 
 		x_pos=x_pos+40
@@ -60,6 +61,28 @@ for row, series in labyrinthe_map.iterrows():
 	y_pos=y_pos+40
 
 ######
+
+######
+#Generation of object
+
+# while cl.Stuff.COUNT != 0:
+# 	#fonction de creation
+# 	stuff=cl.Stuff()
+# 	rect_x=rd.randrange(0,600,40)
+# 	rect_y=rd.randrange(0,600,40)
+# 	while pygame.sprite.spritecollide(stuff,stuff_list,False):
+# 		stuff.position(rect_x,rect_y,player,wall_list)
+# 		print(stuff.rect)
+# 	#Add to the groups for drawing and collision management
+# 	stuff_list.add(stuff)	
+# 	all_sprite.add(stuff)
+
+# 	print (stuff.rect)
+
+# 	cl.Stuff.COUNT -=1
+
+######
+
 
 pygame.key.set_repeat(400, 30)
 

@@ -22,6 +22,9 @@ class Player(pygame.sprite.Sprite):
 
 		self.rect=self.image.get_rect()
 
+		#Count number of stuff for the victory condition
+		self.score=0
+
 	def move(self, direction,wall_list):
 		
 		new_player=Player()
@@ -45,4 +48,25 @@ class Player(pygame.sprite.Sprite):
 				self.rect=new_player.rect
 
 
+class Stuff(pygame.sprite.Sprite):
 
+	#Use to generate 7 object on the map
+	COUNT=7
+
+	def __init__(self):
+		pygame.sprite.Sprite.__init__(self)
+
+		self.image=pygame.image.load('pictures/object.png').convert_alpha()
+
+		self.rect=self.image.get_rect()
+
+	def position(self,rect_x,rect_y,player,wall_list):
+		test_stuff=Stuff()
+		test_stuff.rect.x=rect_x
+		test_stuff.rect.y=rect_y
+
+		if not pygame.sprite.spritecollide(test_stuff,wall_list,False) and not pygame.sprite.collide_rect(test_stuff,player):
+			self.rect.x=rect_x
+			self.rect.y=rect_y
+			print("Test2")
+		print('Test3')
