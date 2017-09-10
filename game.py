@@ -10,17 +10,34 @@ import class_game as cl
 
 pygame.init()
 
-window=pygame.display.set_mode((600,600),RESIZABLE)
+window=pygame.display.set_mode((680,680),RESIZABLE)
 
-backgroud=pygame.Surface([600,600])
+backgroud=pygame.Surface([680,680])
 
 window.blit(backgroud,(0,0))
 	
 
 #Create sprite groups using for drawing sprites and collision management
+edge_list=pygame.sprite.Group()
 wall_list=pygame.sprite.Group()
 stuff_list=pygame.sprite.Group()
 all_sprite=pygame.sprite.Group()
+
+
+#####
+# #Generation of edge of the window
+# for i in range(0,640,40):
+# 	edge_top=cl.Wall()
+# 	edge_top.rect.x=i
+# 	edge_top.rect.y=0
+# 	edge_bot=cl.Wall()
+# 	edge_bot.rect.x=i
+# 	edge_bot.rect.y=0
+# 	edge_list.add(edge_top)
+# 	edge_list.add(edge_bot)
+# edge_list.draw(window)
+
+
 
 ######
 #Generation of Labyrinth
@@ -30,7 +47,7 @@ def data_from_csv(csv_file):
 	data=pd.read_csv(csv_file, sep=",", header=None, dtype=str)
 	return data
 
-labyrinthe_map=data_from_csv('level.csv')
+labyrinthe_map=data_from_csv('level2.csv')
 
 x_pos=0
 y_pos=0
@@ -65,21 +82,22 @@ for row, series in labyrinthe_map.iterrows():
 ######
 #Generation of object
 
-# while cl.Stuff.COUNT != 0:
-# 	#fonction de creation
-# 	stuff=cl.Stuff()
-# 	rect_x=rd.randrange(0,600,40)
-# 	rect_y=rd.randrange(0,600,40)
-# 	while pygame.sprite.spritecollide(stuff,stuff_list,False):
-# 		stuff.position(rect_x,rect_y,player,wall_list)
-# 		print(stuff.rect)
-# 	#Add to the groups for drawing and collision management
-# 	stuff_list.add(stuff)	
-# 	all_sprite.add(stuff)
+while cl.Stuff.COUNT != 0:
+	#fonction de creation
+	stuff=cl.Stuff()
 
-# 	print (stuff.rect)
+	while pygame.sprite.spritecollide(stuff,stuff_list,False):
+		rect_x=rd.randrange(40,600,40)
+		rect_y=rd.randrange(40,600,40)
+		stuff.position(rect_x,rect_y,player,wall_list)
 
-# 	cl.Stuff.COUNT -=1
+	#Add to the groups for drawing and collision management
+	stuff_list.add(stuff)	
+	all_sprite.add(stuff)
+
+	print (stuff.rect)
+
+	cl.Stuff.COUNT -=1
 
 ######
 

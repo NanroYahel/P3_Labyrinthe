@@ -45,7 +45,8 @@ class Player(pygame.sprite.Sprite):
 		if direction==K_RIGHT:
 			new_player.rect=new_player.rect.move(40,0)
 			if not pygame.sprite.spritecollide(new_player,wall_list,False):
-				self.rect=new_player.rect
+				self.rect=new_player.rect		
+
 
 
 class Stuff(pygame.sprite.Sprite):
@@ -56,7 +57,7 @@ class Stuff(pygame.sprite.Sprite):
 	def __init__(self):
 		pygame.sprite.Sprite.__init__(self)
 
-		self.image=pygame.image.load('pictures/object.png').convert_alpha()
+		self.image=pygame.image.load('pictures/stuff_3.png').convert_alpha()
 
 		self.rect=self.image.get_rect()
 
@@ -65,8 +66,8 @@ class Stuff(pygame.sprite.Sprite):
 		test_stuff.rect.x=rect_x
 		test_stuff.rect.y=rect_y
 
-		if not pygame.sprite.spritecollide(test_stuff,wall_list,False) and not pygame.sprite.collide_rect(test_stuff,player):
+		if not pygame.sprite.spritecollide(test_stuff,wall_list,False)\
+		 and not pygame.sprite.collide_rect(test_stuff,player):
 			self.rect.x=rect_x
 			self.rect.y=rect_y
-			print("Test2")
-		print('Test3')
+
