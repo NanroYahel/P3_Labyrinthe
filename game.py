@@ -14,6 +14,10 @@ window=pygame.display.set_mode((680,680),RESIZABLE)
 
 backgroud=pygame.Surface([680,680])
 
+gameover=pygame.image.load('pictures/gameover.png').convert()
+
+youwin=pygame.image.load('pictures/win.png').convert()
+
 window.blit(backgroud,(0,0))
 	
 
@@ -22,21 +26,6 @@ edge_list=pygame.sprite.Group()
 wall_list=pygame.sprite.Group()
 stuff_list=pygame.sprite.Group()
 all_sprite=pygame.sprite.Group()
-
-
-#####
-# #Generation of edge of the window
-# for i in range(0,640,40):
-# 	edge_top=cl.Wall()
-# 	edge_top.rect.x=i
-# 	edge_top.rect.y=0
-# 	edge_bot=cl.Wall()
-# 	edge_bot.rect.x=i
-# 	edge_bot.rect.y=0
-# 	edge_list.add(edge_top)
-# 	edge_list.add(edge_bot)
-# edge_list.draw(window)
-
 
 
 ######
@@ -73,6 +62,15 @@ for row, series in labyrinthe_map.iterrows():
 			#Add to the all_sprite group for drawing
 			all_sprite.add(player)
 
+		#Create guardian
+		if labyrinthe_map.iloc[row,columns]=='finish':
+			guardian=cl.Guardian()
+			guardian.rect.x=x_pos
+			guardian.rect.y=y_pos
+			#Add to the all_sprite group for drawing
+			all_sprite.add(guardian)
+
+
 		x_pos=x_pos+40
 
 	y_pos=y_pos+40
@@ -86,7 +84,10 @@ while cl.Stuff.COUNT != 0:
 	#fonction de creation
 	stuff=cl.Stuff()
 
-	while pygame.sprite.spritecollide(stuff,stuff_list,False):
+
+	while pygame.sprite.spritecollide(stuff, wall_list,False)\
+	 or pygame.sprite.spritecollide(stuff,stuff_list,False):
+		# while pygame.sprite.spritecollide(stuff,stuff_list,False):
 		rect_x=rd.randrange(40,600,40)
 		rect_y=rd.randrange(40,600,40)
 		stuff.position(rect_x,rect_y,player,wall_list)
@@ -95,11 +96,11 @@ while cl.Stuff.COUNT != 0:
 	stuff_list.add(stuff)	
 	all_sprite.add(stuff)
 
-	print (stuff.rect)
-
 	cl.Stuff.COUNT -=1
 
 ######
+
+
 
 
 pygame.key.set_repeat(400, 30)
@@ -107,10 +108,22 @@ pygame.key.set_repeat(400, 30)
 continuer=1
 
 def update_screen():
-	window.blit(backgroud,(0,0))
-	all_sprite.draw(window)		
+
+	if win_condition!='no' and win_condition!='yes':
+		window.blit(backgroud,(0,0))
+		all_sprite.draw(window)	
+
+	if win_condition=='no':
+		window.blit(gameover,(0,0))
+	if win_condition=='yes':
+		window.blit(youwin,(0,0))
+	# else:
+	# 	window.blit(backgroud,(0,0))
+	# 	all_sprite.draw(window)	
+
 	pygame.display.flip()
 
+win_condition=''
 
 while continuer:
 	for event in pygame.event.get():
@@ -119,5 +132,14 @@ while continuer:
 		if event.type==KEYDOWN:
 			direction=event.key
 			player.move(direction,wall_list)
+			if pygame.sprite.spritecollide(player,stuff_list,True):
+				player.score+=1
+				print(player.score)
+			if pygame.sprite.collide_rect(player,guardian):
+				if player.score==7:
+					win_condition='yes'
+				else:
+					win_condition='no'
 
-		update_screen()
+	update_screen()
+

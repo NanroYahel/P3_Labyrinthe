@@ -1,6 +1,8 @@
 #! usr/bin python3
 # coding:utf-8
 
+import os
+
 import pygame
 from pygame.locals import *
 
@@ -48,7 +50,6 @@ class Player(pygame.sprite.Sprite):
 				self.rect=new_player.rect		
 
 
-
 class Stuff(pygame.sprite.Sprite):
 
 	#Use to generate 7 object on the map
@@ -57,7 +58,9 @@ class Stuff(pygame.sprite.Sprite):
 	def __init__(self):
 		pygame.sprite.Sprite.__init__(self)
 
-		self.image=pygame.image.load('pictures/stuff_3.png').convert_alpha()
+		path_picture='pictures/stuff_'+str(Stuff.COUNT)+'.png'
+
+		self.image=pygame.image.load(path_picture).convert_alpha()
 
 		self.rect=self.image.get_rect()
 
@@ -71,3 +74,11 @@ class Stuff(pygame.sprite.Sprite):
 			self.rect.x=rect_x
 			self.rect.y=rect_y
 
+class Guardian(pygame.sprite.Sprite):
+
+	def __init__(self):
+		pygame.sprite.Sprite.__init__(self)
+
+		self.image=pygame.image.load('pictures/guardian.png').convert_alpha()
+
+		self.rect=self.image.get_rect()
