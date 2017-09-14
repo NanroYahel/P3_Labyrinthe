@@ -121,7 +121,6 @@ while continuer:
             #When the player touch an item, he kill it and get one point
             if pygame.sprite.spritecollide(player, stuff_list, True):
                 player.score += 1
-                print(player.score)
             #Test if the player touch the guardian
             elif pygame.sprite.collide_rect(player, guardian):
                 if player.score == 7:
